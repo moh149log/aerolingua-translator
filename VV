@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Translator - LibreTranslate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        font-family: 'Cairo', sans-serif;
+        background: linear-gradient(to right, #fdfbfb, #ebedee);
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+        margin: 0;
+      }
+      h1 {
+        color: #0f4c75;
+        margin-bottom: 10px;
+      }
+      p {
+        margin-top: 0;
+        color: #555;
+      }
+      textarea {
+        width: 90%;
+        max-width: 600px;
+        height: 150px;
+        margin: 15px 0;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        resize: vertical;
+        font-size: 16px;
+      }
+      select, button {
+        margin: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+      }
+      button {
+        background-color: #3282b8;
+        color: white;
+        border: none;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #0f4c75;
+      }
+      footer {
+        margin-top: 40px;
+        font-size: 14px;
+        color: #888;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Student Translator</h1>
+    <p>ترجم نصك باستخدام LibreTranslate – سهل وسريع!</p>
+
+    <textarea id="inputText" placeholder="اكتب النص هنا..."></textarea>
+
+    <div>
+      <label for="sourceLang">من:</label>
+      <select id="sourceLang">
+        <option value="ar">العربية</option>
+        <option value="en" selected>الإنجليزية</option>
+        <option value="fr">الفرنسية</option>
+        <option value="de">الألمانية</option>
+      </select>
+
+      <label for="targetLang">إلى:</label>
+      <select id="targetLang">
+        <option value="en">الإنجليزية</option>
+        <option value="ar" selected>العربية</option>
+        <option value="fr">الفرنسية</option>
+        <option value="de">الألمانية</option>
+      </select>
+    </div>
+
+    <button onclick="translateText()">ترجمة</button>
+
+    <textarea id="outputText" placeholder="الترجمة تظهر هنا..." readonly></textarea>
+
+    <footer>
+      الفكرة محفوظة لـ محمد أبو الخير © 2025
+    </footer>
+
+    <script>
+      async function translateText() {
+        const input = document.getElementById("inputText").value;
+        const source = document.getElementById("sourceLang").value;
+        const target = document.getElementById("targetLang").value;
+
+        if (!input.trim()) {
+          alert("يرجى كتابة نص للترجمة.");
+          return;
+        }
+
+        const response = await fetch("https://libretranslate.de/translate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            q: input,
+            source: source,
+            target: target,
+            format: "text"
+          })
+        });
+
+        const data = await response.json();
+        document.getElementById("outputText").value = data.translatedText;
+      }
+    </script>
+  </body>
+</html>
